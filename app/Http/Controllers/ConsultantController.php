@@ -17,24 +17,54 @@ class ConsultantController extends Controller
 
     public function login(Request $request)
     {
-        $account=request()->get('account');
-        $password=request()->get('password');
-        if (!Consultant::where('email', $account)->exists()) {
-            return response(['error' => 'error account'], 401);
+        try {
+            if (!$request->has(['account', 'password'])) {
+                return response(['error' => 'some columns empty'], 400);
+            }
+            $account=request()->get('account');
+            $password=request()->get('password');
+            if (!Consultant::where('email', $account)->exists()) {
+                return response(['error' => 'error account'], 401);
+            }
+
+            $consultant = Consultant::where('email', $account)->first();
+            if (!Hash::check($password, $consultant->password)) {
+                return response(['error' => 'error password'], 401);
+            }
+
+            $data = [
+                'account' => $consultant->email,
+                'name' => $consultant->name,
+                'nationality' => $consultant->nationality,
+                'introduction' => $consultant->introduction,
+            ];
+        } catch (\Exception $e) {
+            return response(['result' => $e], 400);
         }
+        
+        return response(['result' => $data], 200);
+    }
 
-        $consultant = Consultant::where('email', $account)->first();
-        if (!Hash::check($password, $consultant->password)) {
-            return response(['error' => 'error password'], 401);
+
+    public function createConsultant(Request $request)
+    {
+        try {
+            if (!$request->has(['name', 'email', 'nationality', 'introduction', 'password', 'sex'])) {
+                return response(['error' => 'some columns empty'], 400);
+            }
+            $data = [
+                'email' => request()->get('email'),
+                'name' => request()->get('name'),
+                'nationality' => request()->get('nationality'),
+                'introduction' => request()->get('introduction'),
+                'password' => Hash::make(request()->get('password')),
+                'sex' => request()->get('sex'),
+            ];
+            Consultant::create($data);
+        } catch (\Exception $e) {
+            return response(['result' => $e], 400);
         }
-
-        $data = [
-            'account' => $consultant->email,
-            'name' => $consultant->name,
-            'nationality' => $consultant->nationality,
-            'introduction' => $consultant->introduction,
-        ];
-
-        return response($data, 200);
+        
+        return response(['result' => 'ok'], 200);
     }
 }

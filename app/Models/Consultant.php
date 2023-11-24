@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Consultant extends Model
 {
     protected $table = 'consultants';
+    protected $guarded = [];
+    protected $hidden = ['password'];
 
     use HasFactory;
 }
