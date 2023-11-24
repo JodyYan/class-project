@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Classes;
+use App\Models\StudentClass;
 use Carbon\Carbon;
 use DB;
 
 class ClassesController extends Controller
 {
     private $classes;
+    private $student_class;
 
     public function __construct()
     {
         $this->classes= new Classes();
+        $this->student_class = new StudentClass();
     }
 
     public function store(Request $request)
@@ -103,6 +106,18 @@ class ClassesController extends Controller
             return response(['result' => $e], 400);
         }
         
+        return response(['result' => 'ok'], 200);
+    }
+
+    public function destroy($id)
+    {
+        $student_classes = $this->student_class->where('class_id', $id)->get()->toArray();
+        if (!empty($student_classes)) {
+            return response(['error' => 'The class still has student.'], 400);
+        } 
+
+        $this->classes->delete(['id' => $id]);
+
         return response(['result' => 'ok'], 200);
     }
 }
