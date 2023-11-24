@@ -32,3 +32,6 @@ Route::get('/classes', 'App\Http\Controllers\ClassesController@show');
 Route::patch('/class/{id}', 'App\Http\Controllers\ClassesController@update');
 
 Route::delete('/class/{id}', 'App\Http\Controllers\ClassesController@destroy');
+
+Route::post('/student_class', 'App\Http\Controllers\StudentClassController@store');
+
