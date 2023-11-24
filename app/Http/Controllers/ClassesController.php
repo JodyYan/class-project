@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Classes;
+use Carbon\Carbon;
 
 class ClassesController extends Controller
 {
@@ -34,5 +35,44 @@ class ClassesController extends Controller
         }
         
         return response(['result' => 'ok'], 200);
+    }
+
+    public function show(Request $request)
+    {
+        $data = [
+            'name' => request()->get('name'),
+            'introduction' => request()->get('introduction'),
+            'consultant_id' => request()->get('consultant_id'),
+            'class_type_id' => request()->get('class_type_id'),
+        ];
+
+        $start_date_time = request()->get('start_date_time');
+        $end_date_time = request()->get('end_date_time');
+
+        $result = $this->classes;
+        foreach ($data as $key => $value) {
+            if (!empty($value)) {
+                $result = $result->where($key, $value);
+            }
+        }
+
+        // 只會撈尚未結束的課
+        if (!empty($start_date_time)) {
+            $result = $result->where('start_date_time', '>=', $start_date_time);
+        } else {
+            $now = Carbon::now()->toDateTimeString();
+            if (empty($end_date_time)) {
+                $result = $result->where('end_date_time', '>=', $now);
+            } else {
+                $result = $result->where('start_date_time', '>=', $now);
+            }
+        }
+        if (!empty($end_date_time)) {
+            $result = $result->where('end_date_time', '<=', $end_date_time)->get();
+        } else {
+            $result = $result->get();
+        }
+        
+        return response(['result' => $result], 200);
     }
 }
