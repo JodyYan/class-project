@@ -48,6 +48,7 @@ return new class extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
+            $table->text('introduction');
             $table->integer('consultant_id')->unsigned();
             $table->integer('class_type_id')->unsigned();
             $table->dateTime('start_date_time')->default(date("Y-m-d H:i:s"))->comment('課程開始時間');
