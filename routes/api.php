@@ -28,3 +28,5 @@ Route::get('/consultants', 'App\Http\Controllers\ConsultantController@index');
 Route::post('/class', 'App\Http\Controllers\ClassesController@store');
 
 Route::get('/classes', 'App\Http\Controllers\ClassesController@show');
+
+Route::patch('/class/{id}', 'App\Http\Controllers\ClassesController@update');

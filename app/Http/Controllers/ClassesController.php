@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Classes;
 use Carbon\Carbon;
+use DB;
 
 class ClassesController extends Controller
 {
@@ -56,7 +57,7 @@ class ClassesController extends Controller
             }
         }
 
-        // 只會撈尚未結束的課
+        // 未指定區間只會撈尚未結束的課
         if (!empty($start_date_time)) {
             $result = $result->where('start_date_time', '>=', $start_date_time);
         } else {
@@ -74,5 +75,34 @@ class ClassesController extends Controller
         }
         
         return response(['result' => $result], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $data = [
+                'name' => request()->get('name'),
+                'introduction' => request()->get('introduction'),
+                'consultant_id' => request()->get('consultant_id'),
+                'class_type_id' => request()->get('class_type_id'),
+                'start_date_time' => request()->get('start_date_time'),
+                'end_date_time' => request()->get('end_date_time'),
+            ];
+            $result = $this->classes->where('id', $id);
+
+            foreach ($data as $key => $value) {
+                if (empty($value)) {
+                    unset($data[$key]);   
+                }
+            }
+            $result = $result->update($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response(['result' => $e], 400);
+        }
+        
+        return response(['result' => 'ok'], 200);
     }
 }
