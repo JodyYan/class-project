@@ -7,6 +7,7 @@ use App\Models\StudentClass;
 use App\Models\Classes;
 use App\Models\Student;
 
+
 class StudentClassController extends Controller
 {
     private $student_class;
@@ -43,5 +44,23 @@ class StudentClassController extends Controller
         }
         
         return response(['result' => 'ok'], 200);
+    }
+
+    public function show(Request $request, $student_id)
+    {
+        $classes = $this->student_class
+            ->where('student_id', $student_id)
+            ->get()
+            ->pluck('class_id')
+            ->toArray();
+
+        if (!empty($classes)) {
+            $result = $this->classes
+                ->whereIn('id', $classes)
+                ->get();
+        } else {
+            $result = null;
+        }
+        return response(['result' => $result], 200);
     }
 }

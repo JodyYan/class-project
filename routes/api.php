@@ -35,3 +35,4 @@ Route::delete('/class/{id}', 'App\Http\Controllers\ClassesController@destroy');
 
 Route::post('/student_class', 'App\Http\Controllers\StudentClassController@store');
 
+Route::get('/student/{id}/classes', 'App\Http\Controllers\StudentClassController@show');
