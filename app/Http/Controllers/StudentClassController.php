@@ -31,6 +31,15 @@ class StudentClassController extends Controller
                 'class_id' => request()->get('class_id'),
                 'student_id' => request()->get('student_id'),
             ];
+            $check_class = $this->student_class
+                ->where('class_id', $data['class_id'])
+                ->where('student_id', $data['student_id'])
+                ->get()
+                ->toArray();
+
+            if (!empty($check_class)) {
+                return response(['error' => 'Class already existed.'], 400);
+            }
             if (empty($this->classes->where('id', $data['class_id'])->get()->toArray())) {
                 return response(['error' => 'Class does not exist.'], 400);   
             }
