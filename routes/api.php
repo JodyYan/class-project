@@ -24,3 +24,5 @@ Route::post('/consultant_login', 'App\Http\Controllers\ConsultantController@logi
 Route::post('/consultant', 'App\Http\Controllers\ConsultantController@store');
 
 Route::get('/consultants', 'App\Http\Controllers\ConsultantController@index');
+
+Route::post('/class', 'App\Http\Controllers\ClassesController@store');

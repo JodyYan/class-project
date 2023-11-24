@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClassType extends Model
 {
     protected $table = 'class_types';
+    protected $guarded = [];
+    protected $hidden = ['created_at', 'updated_at'];
 
 }
