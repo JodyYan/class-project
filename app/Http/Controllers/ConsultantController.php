@@ -46,7 +46,7 @@ class ConsultantController extends Controller
     }
 
 
-    public function createConsultant(Request $request)
+    public function store(Request $request)
     {
         try {
             if (!$request->has(['name', 'email', 'nationality', 'introduction', 'password', 'sex'])) {
