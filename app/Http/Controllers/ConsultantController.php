@@ -67,4 +67,10 @@ class ConsultantController extends Controller
         
         return response(['result' => 'ok'], 200);
     }
+
+    public function index(Request $request)
+    {
+        $data = Consultant::get();
+        return response(['result' => $data], 200);
+    }
 }

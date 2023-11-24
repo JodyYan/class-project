@@ -22,3 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/consultant_login', 'App\Http\Controllers\ConsultantController@login');
 
 Route::post('/consultant', 'App\Http\Controllers\ConsultantController@createConsultant');
+
+Route::get('/consultants', 'App\Http\Controllers\ConsultantController@index');

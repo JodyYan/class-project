@@ -10,7 +10,7 @@ class Consultant extends Model
 {
     protected $table = 'consultants';
     protected $guarded = [];
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'created_at', 'updated_at', 'enabled'];
 
     use HasFactory;
 }
