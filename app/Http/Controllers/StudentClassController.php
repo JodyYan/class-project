@@ -35,12 +35,31 @@ class StudentClassController extends Controller
             $check_class = $this->student_class
                 ->where('class_id', $data['class_id'])
                 ->where('student_id', $data['student_id'])
-                ->get()
-                ->toArray();
+                ->first();
 
             if (!empty($check_class)) {
                 return response(['error' => 'Class already existed.'], 400);
             }
+
+            $class = $this->classes
+                ->where('id', $data['class_id'])
+                ->first();
+
+            $time_check = $this->student_class
+                ->join('classes', 'classes.id', 'student_classes.class_id')
+                ->where(function ($q) use ($class) {
+                    $q->where('classes.start_date_time', '<=', $class['start_date_time'])
+                        ->where('classes.end_date_time', '>=', $class['start_date_time']);
+                })
+                ->orwhere(function ($q) use ($class) {
+                    $q->where('classes.start_date_time', '<=', $class['end_date_time'])
+                        ->where('classes.end_date_time', '>=', $class['end_date_time']);
+                })
+                ->get();
+            if (!empty($time_check)) {
+                return response(['error' => 'This time has already had class.'], 400); 
+            }
+
             if (empty($this->classes->where('id', $data['class_id'])->get()->toArray())) {
                 return response(['error' => 'Class does not exist.'], 400);   
             }
