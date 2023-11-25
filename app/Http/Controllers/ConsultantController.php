@@ -5,14 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Consultant;
+use App\Models\Classes;
+use App\Models\StudentClass;
+use App\Models\Student;
+
 
 class ConsultantController extends Controller
 {
     private $consultant;
+    private $classes;
+    private $student_class;
+    private $student;
 
     public function __construct()
     {
         $this->consultant = new Consultant();
+        $this->classes = new Classes();
+        $this->student_class = new StudentClass();
+        $this->student = new Student();
     }
 
     public function login(Request $request)
@@ -72,5 +82,22 @@ class ConsultantController extends Controller
     {
         $data = Consultant::get();
         return response(['result' => $data], 200);
+    }
+
+    public function show(Request $request, $class_id)
+    {
+        $student_ids = $this->student_class
+            ->where('class_id', $class_id)
+            ->get()
+            ->pluck('student_id')
+            ->toArray();
+        if(!empty($student_ids)) {
+            $students = $this->student
+                ->whereIn('id', $student_ids)
+                ->get()
+                ->pluck('name');   
+        }
+        
+        return response(['result' => $students], 200);
     }
 }

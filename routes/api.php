@@ -25,6 +25,8 @@ Route::post('/consultant', 'App\Http\Controllers\ConsultantController@store');
 
 Route::get('/consultants', 'App\Http\Controllers\ConsultantController@index');
 
+Route::get('/class/{id}/students', 'App\Http\Controllers\ConsultantController@show');
+
 Route::post('/class', 'App\Http\Controllers\ClassesController@store');
 
 Route::get('/classes', 'App\Http\Controllers\ClassesController@show');
