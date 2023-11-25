@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\StudentClass;
 use App\Models\Classes;
 use App\Models\Student;
+use Carbon\Carbon;
 
 
 class StudentClassController extends Controller
@@ -71,5 +72,31 @@ class StudentClassController extends Controller
             $result = null;
         }
         return response(['result' => $result], 200);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $student_class = $this->student_class
+            ->where('id', $id)
+            ->first();
+        if (empty($student_class)) {
+            return response(['error' => 'The class does not exist.'], 400);
+        }
+
+        $class = $this->classes
+            ->where('id', $student_class['class_id'])
+            ->first();
+
+        $now = Carbon::now()->toDateTimeString();
+
+        if ($class['start_date_time'] <= $now) {
+            return response(['error' => 'The class has already over time.'], 400);
+        }
+
+        $this->student_class
+            ->where('id', $id)
+            ->delete();
+
+        return response(['result' => 'ok'], 200);
     }
 }
