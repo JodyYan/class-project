@@ -24,7 +24,7 @@ class ConsultantFactory extends Factory
             'nationality' => 'USA',
             'introduction' => fake()->sentence(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('123456'),
             'enabled' => 1,
 
         ];
