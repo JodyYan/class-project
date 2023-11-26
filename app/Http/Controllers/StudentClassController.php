@@ -72,7 +72,7 @@ class StudentClassController extends Controller
             return response(['result' => $e], 400);
         }
         
-        return response(['result' => 'ok'], 200);
+        return response(['result' => 'ok'], 201);
     }
 
     public function show(Request $request, $student_id)
